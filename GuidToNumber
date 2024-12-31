@@ -1,0 +1,24 @@
+import java.util.UUID;  
+import java.math.BigInteger;  
+
+public class GuidToNumber {  
+    public static void main(String[] args) {  
+        // Generate a GUID  
+        UUID uuid = UUID.randomUUID();  
+        System.out.println("Generated GUID: " + uuid.toString());  
+
+        // Convert GUID to a byte array  
+        byte[] uuidBytes = new byte[16];  
+        long mostSigBits = uuid.getMostSignificantBits();  
+        long leastSigBits = uuid.getLeastSignificantBits();  
+        
+        for (int i = 0; i < 8; i++) {  
+            uuidBytes[i] = (byte) (mostSigBits >>> (8 * (7 - i)));  
+            uuidBytes[i + 8] = (byte) (leastSigBits >>> (8 * (7 - i)));  
+        }  
+
+        // Convert byte array to a BigInteger  
+        BigInteger bigInteger = new BigInteger(1, uuidBytes);  
+        System.out.println("GUID as Number: " + bigInteger);  
+    }  
+}
