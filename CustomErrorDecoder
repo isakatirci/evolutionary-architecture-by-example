@@ -1,0 +1,19 @@
+import feign.Response;  
+import feign.codec.ErrorDecoder;  
+import org.slf4j.Logger;  
+import org.slf4j.LoggerFactory;  
+
+public class CustomErrorDecoder implements ErrorDecoder {  
+
+    private static final Logger logger = LoggerFactory.getLogger(CustomErrorDecoder.class);  
+
+    @Override  
+    public Exception decode(String methodKey, Response response) {  
+        long startTime = Long.parseLong(response.request().headers().get("Start-Time").iterator().next());  
+        long endTime = System.nanoTime();  
+        long durationInMillis = (endTime - startTime) / 1_000_000;  
+
+        logger.info("Feign request to {} took {} ms", response.request().url(), durationInMillis);  
+        return new RuntimeException("Feign call failed"); // Handle exception as needed  
+    }  
+}
